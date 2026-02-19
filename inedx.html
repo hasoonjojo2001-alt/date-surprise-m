@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+overflow:hidden;
+text-align:center;
+color:white;
+position:relative;
+}
+
+/* خلفية صورتكم Blur */
+body::before{
+content:"";
+background:url('photo.jpg') center/cover no-repeat;
+position:absolute;
+width:100%;
+height:100%;
+filter:blur(8px) brightness(0.6);
+z-index:-1;
+}
+
+.card{
+background:white;
+color:black;
+padding:40px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+width:360px;
+position:relative;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:20px;
+font-size:16px;
+cursor:pointer;
+margin:10px;
+transition:0.3s;
+}
+
+.yes{
+background:#ff4d6d;
+color:white;
+}
+
+.no{
+background:#ccc;
+position:absolute;
+}
+
+.countdown{
+font-size:18px;
+margin-top:15px;
+color:#ff4d6d;
+}
+
+/* نبض */
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.15);}
+100%{transform:scale(1);}
+}
+.yes:active{
+animation:pulse 0.4s;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="mainCard">
+<h2>Will you be my date tomorrow? ❤️</h2>
+<button class="yes" onclick="stepTwo()">Yes 💘</button>
+<button class="no" id="noBtn">No 😅</button>
+</div>
+
+<audio id="bgMusic">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const noBtn=document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover",function(){
+const x=Math.random()*250;
+const y=Math.random()*200;
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
+noBtn.innerText="Nice try 😏";
+});
+
+function stepTwo(){
+document.getElementById("bgMusic").play();
+confetti({particleCount:150,spread:100});
+
+document.getElementById("mainCard").innerHTML=`
+<h2>Tomorrow at 4 PM ⏰</h2>
+<p>Dress code: as usual… because you're beautiful in every case ❤️</p>
+<div class="countdown" id="timer"></div>
+<br>
+<button onclick="finalStep()">Continue</button>
+`;
+
+startCountdown();
+}
+
+/* عد تنازلي */
+function startCountdown(){
+const target=new Date();
+target.setHours(16,0,0,0);
+
+setInterval(()=>{
+const now=new Date();
+const diff=target-now;
+
+if(diff>0){
+const hours=Math.floor(diff/1000/60/60);
+const minutes=Math.floor(diff/1000/60)%60;
+const seconds=Math.floor(diff/1000)%60;
+document.getElementById("timer").innerHTML=
+"Countdown: "+hours+"h "+minutes+"m "+seconds+"s";
+}
+},1000);
+}
+
+/* آلة كاتبة */
+function typeWriter(text, elementId, speed=50){
+let i=0;
+function typing(){
+if(i<text.length){
+document.getElementById(elementId).innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,speed);
+}
+}
+typing();
+}
+
+function finalStep(){
+confetti({particleCount:200,spread:120});
+
+const startDate=new Date("2018-03-08"); // غير التاريخ
+const today=new Date();
+const diffDays=Math.floor((today-startDate)/(1000*60*60*24));
+
+document.getElementById("mainCard").innerHTML=`
+<h2 id="finalText"></h2>
+<p>We've survived ${diffDays} days together… and I’d still choose you again.</p>
+<br>
+<button onclick="lastScene()">Come here</button>
+`;
+
+typeWriter("I miss you 🤍", "finalText", 70);
+}
+
+function lastScene(){
+confetti({particleCount:300,spread:150});
+document.body.innerHTML=`
+<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:black;color:white;font-size:28px;text-align:center;padding:20px;">
+You’re mine at 4 PM.<br><br>
+And honestly… I’d pick you in every lifetime. ❤️
+</div>
+`;
+}
+</script>
+
+</body>
+</html>
